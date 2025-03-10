@@ -76,18 +76,37 @@ void loop(void)
       Serial.print("Button ID: ");
       Serial.print(i);
       Serial.print("\t State: ");
-      if (buttonState[i] == PRESSED)   Serial.println("Pressed!");
-      if (buttonState[i] == RELEASED)  Serial.println("Released!");
+      
 
       if(buttonState[i] == PRESSED && i == 1)
       {
         Serial.println("advance!");
          advance (255,255);
       }  
-      if(buttonState[i] == RELEASED && i == 1)
+     
+       if(buttonState[i] == PRESSED && i == 3)
       {
-        stop();
+        Serial.println("backoff!");
+         back_off (255,255);
       }  
+      
+       if(buttonState[i] == PRESSED && i == 4)
+      {
+        Serial.println("left!");
+         turn_L (255,255);
+      }  
+     
+        if(buttonState[i] == PRESSED && i == 2)
+      {
+        Serial.println("rights!");
+         turn_R (255,255);
+      }  
+         if(buttonState[i] == PRESSED && i == 5)
+      {
+        Serial.println("stop!");
+         stop(); 
+      }  
+      
     }
    }
     
