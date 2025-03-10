@@ -69,13 +69,34 @@ void loop(void)
     
     Serial.print("Joystick Value: ");
     Serial.print(joystickX);
-    Serial.print("  ");
+     Serial.print("  ");
     Serial.println(joystickY);
+    int reverse; 
+    if(joystickX > 128)
+    {
+    
+      if(joystickY > 128)
+      {
+        advance(255,map(joystickY, 128,255,0,255));
+      }
+      else
+      {
+        advance(map(joystickY,0,128,0,255), 255);
+      }
+    }
+    else if(joystickX < 128)
+    {
+     back_off (255,255);
+    }
+     else if(joystickX = 128)
+    {
+     stop(); 
+    }
+   
+    
     
     for (int i = 1; i < 7; i++) {
-      Serial.print("Button ID: ");
-      Serial.print(i);
-      Serial.print("\t State: ");
+      
       
 
       if(buttonState[i] == PRESSED && i == 1)
