@@ -1,3 +1,9 @@
+#include "GoBLE.h"
+
+
+int joystickX, joystickY;
+int buttonState[7];
+
 //Standard PWM DC control
 int E1 = 5;     //M1 Speed Control
 int E2 = 6;     //M2 Speed Control
@@ -39,40 +45,52 @@ void turn_R (char a,char b)             //Turn Right
 }
 void setup(void)
 {
-  int i;
-  for(i=4;i<=7;i++)
-    pinMode(i, OUTPUT);
+  int j;
+  for(j=4;j<=7;j++)
+    pinMode(j, OUTPUT);
+  
+  Goble.begin();
   Serial.begin(9600);      //Set Baud Rate
   Serial.println("Run keyboard control");
 }
+
 void loop(void)
 {
-  if(Serial.available()){
-    char val = Serial.read();
-    if(val != -1)
-    {
-      switch(val)
+   if(Goble.available()){
+    joystickX = Goble.readJoystickX();
+    joystickY = Goble.readJoystickY();
+    
+    buttonState[SWITCH_UP]     = Goble.readSwitchUp();
+    buttonState[SWITCH_DOWN]   = Goble.readSwitchDown();
+    buttonState[SWITCH_LEFT]   = Goble.readSwitchLeft();
+    buttonState[SWITCH_RIGHT]  = Goble.readSwitchRight();
+    buttonState[SWITCH_SELECT] = Goble.readSwitchSelect();
+    buttonState[SWITCH_START]  = Goble.readSwitchStart();
+    
+    Serial.print("Joystick Value: ");
+    Serial.print(joystickX);
+    Serial.print("  ");
+    Serial.println(joystickY);
+    
+    for (int i = 1; i < 7; i++) {
+      Serial.print("Button ID: ");
+      Serial.print(i);
+      Serial.print("\t State: ");
+      if (buttonState[i] == PRESSED)   Serial.println("Pressed!");
+      if (buttonState[i] == RELEASED)  Serial.println("Released!");
+
+      if(buttonState[i] == PRESSED && i == 1)
       {
-      case 'w'://Move Forward
-        advance (255,255);   //move forward in max speed
-        break;
-      case 's'://Move Backward
-        back_off (255,255);   //move back in max speed
-        break;
-      case 'a'://Turn Left
-        turn_L (100,100);
-        break;
-      case 'd'://Turn Right
-        turn_R (100,100);
-        break;
-      case 'z':
-        Serial.println("Hello");
-        break;
-      case 'x':
+        Serial.println("advance!");
+         advance (255,255);
+      }  
+      if(buttonState[i] == RELEASED && i == 1)
+      {
         stop();
-        break;
-      }
+      }  
     }
-    else stop();
-  }
+   }
+    
+  
+  
 }
